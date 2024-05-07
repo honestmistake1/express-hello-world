@@ -1,3 +1,7 @@
+"dependencies": {
+  "socket.io": "^4.6.1" // Add this line
+}
+
 {
   "name": "express-hello-world",
   "version": "1.0.0",
