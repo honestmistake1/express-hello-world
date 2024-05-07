@@ -1,5 +1,5 @@
 "dependencies": {
-  "socket.io": "^4.6.1" // Add this line
+  "socket.io": "^4.6.1"
 }
 
 {
