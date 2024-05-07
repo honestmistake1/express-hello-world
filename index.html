@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Online Chess</title>
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(8, 50px);
+      grid-template-rows: repeat(8, 50px);
+      border: 1px solid black;
+    }
+
+    .square {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .light {
+      background-color: #f0d9b5;
+    }
+
+    .dark {
+      background-color: #b58863;
+    }
+  </style>
+</head>
+<body>
+  <div class="board"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const board = document.querySelector('.board');
+
+    // Render the initial board
+    function renderBoard(boardState) {
+      board.innerHTML = '';
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          const square = document.createElement('div');
+          square.classList.add('square', (row + col) % 2 === 0 ? 'light' : 'dark');
+          square.textContent = boardState[row][col];
+          square.addEventListener('click', () => movePiece(`${row}${col}`));
+          board.appendChild(square);
+        }
+      }
+    }
+
+    let selectedSquare = null;
+
+    // Handle piece moves
+    function movePiece(square) {
+      if (selectedSquare) {
+        socket.emit('movePiece', selectedSquare, square);
+        selectedSquare = null;
+      } else {
+        selectedSquare = square;
+      }
+    }
+
+    // Update the board when a new state is received
+    socket.on('updateBoard', (boardState) => {
+      renderBoard(boardState);
+    });
+  </script>
+</body>
+</html>
